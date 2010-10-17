@@ -16,7 +16,8 @@ public class Launcher {
 			System.out.println("file doesn't exist");
 			return;
 		}
-		RDFGraph data = RDFParser.decode(file);
+		RDFParser rdf = new RDFParser();
+		RDFGraph data = rdf.decode(file);
 		
 		TurtleParser.encode(data);
 
