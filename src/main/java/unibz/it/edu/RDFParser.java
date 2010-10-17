@@ -19,11 +19,13 @@ public class RDFParser {
 	}
 
 	/**
-	 * Transform the RDF file @param file to internal representation @class RDFGraph
+	 * Transform the RDF file @param file to internal representation @class
+	 * RDFGraph
+	 * 
 	 * @param file
 	 * @return
 	 */
-			
+
 	public RDFGraph decode(File file) {
 
 		try {
@@ -46,38 +48,66 @@ public class RDFParser {
 
 	private void parseTriplet(Element subject) {
 
+		parseAttributes(subject);
+		parseInnerNodes(subject);
+	}
+
+	private void parseAttributes(Element subject) {
+		String subject_uri = extractURI(subject);
+
+		for (int i = 0; i < subject.getAttributeCount(); i++) {
+			Attribute attr = subject.getAttribute(i);
+
+			if (!attr.getQualifiedName().equals("rdf:about")) {
+				String object_uri = attr.getValue();
+				String predicate_uri = attr.getNamespaceURI()
+						+ attr.getLocalName();
+				data.addTriplet(subject_uri, predicate_uri, object_uri);
+			}
+		}
+	}
+
+	private void parseInnerNodes(Element subject) {
+		String subject_uri = extractURI(subject);
+
 		Elements predicates = subject.getChildElements();
 		for (int i = 0; i < predicates.size(); i++) {
 			Element predicate = predicates.get(i);
-			
+			String predicate_uri = predicate.getNamespaceURI()
+					+ predicate.getLocalName();
+
 			if (is_object_text(predicate)) {
-				add_text_object(subject, predicate);
+				data.addTriplet(subject_uri, predicate_uri, predicate.getChild(
+						0).getValue());
+			} else if (is_object_attr(predicate)) {
+				Attribute attr = predicate.getAttribute("resource",
+						"http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+				String object_uri = attr.getValue();
+				data.addTriplet(subject_uri, predicate_uri, object_uri);
+
 			} else {
 				Elements objects = predicate.getChildElements();
-				for (int j=0; j < objects.size(); j++) {
+				for (int j = 0; j < objects.size(); j++) {
 					Element object = objects.get(j);
-					add_uri_object(subject,predicate, object);
+					String object_uri = extractURI(object);
+					data.addTriplet(subject_uri, predicate_uri, object_uri);
 					parseTriplet(object);
 				}
 			}
 		}
 	}
-	
+
 	private boolean is_object_text(Element predicate) {
 		return ((predicate.getChildCount() == 1) && (predicate.getChild(0) instanceof Text));
 	}
-	
-	private void add_text_object(Element subject, Element predicate) {
-		String subject_uri = extractURI(subject);
-		String predicate_uri = predicate.getNamespaceURI() + predicate.getLocalName();
-		data.addTriplet(subject_uri, predicate_uri, predicate.getChild(0).getValue());
-	}
-	private void add_uri_object(Element subject, Element predicate, Element object) {
-		String subject_uri = extractURI(subject);
-		String predicate_uri = predicate.getNamespaceURI() + predicate.getLocalName();
 
-		String object_uri = extractURI(object);
-		data.addTriplet(subject_uri, predicate_uri, object_uri);
+	private boolean is_object_attr(Element predicate) {
+		Attribute attr = predicate.getAttribute("resource",
+				"http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+		if (attr != null) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -93,7 +123,6 @@ public class RDFParser {
 			value = element.getBaseURI() + value;
 		}
 		return value;
-
 	}
 
 	public static void encode(RDFGraph data) {
