@@ -6,20 +6,22 @@ public class Launcher {
 
 	public static void main(String args[]) {
 
-		if (args.length <= 1) {
+		if (args.length == 0) {
 			System.out.println("Please provide an input file");
 			return;
 		}
 
-		File file = new File(args[1]);
+		File file = new File(args[0]);
 		if (!file.exists()) {
-			System.out.println("file doesn't exist");
+			System.out.println("File doesn't exist");
 			return;
 		}
 		RDFParser rdf = new RDFParser();
 		RDFGraph data = rdf.decode(file);
+		RDFSExpander exp = new RDFSExpander();
+		exp.expand(data);
 		
-		TurtleParser.encode(data);
+		System.out.println(TurtleParser.encode(data).toString());
 
 	}
 }

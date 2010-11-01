@@ -2,7 +2,7 @@ package unibz.it.edu;
 
 public class RDFObject {
 
-	private String value;
+	protected String value;
 
 	public RDFObject(String value) {
 		this.value = value;
@@ -19,8 +19,8 @@ public class RDFObject {
 			return false;
 		if (obj == this)
 			return true;
-		if (this.getClass() != obj.getClass())
-			return false;
+//		if (this.getClass() != obj.getClass())
+//			return false;
 
 		final RDFObject other = (RDFObject) obj;
 		return this.value.equals(other.value);

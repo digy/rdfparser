@@ -62,7 +62,7 @@ public class RDFParser {
 				String object_uri = attr.getValue();
 				String predicate_uri = attr.getNamespaceURI()
 						+ attr.getLocalName();
-				data.addTriplet(subject_uri, predicate_uri, object_uri);
+				data.addTriplet_text(subject_uri, predicate_uri, object_uri);
 			}
 		}
 	}
@@ -77,20 +77,20 @@ public class RDFParser {
 					+ predicate.getLocalName();
 
 			if (is_object_text(predicate)) {
-				data.addTriplet(subject_uri, predicate_uri, predicate.getChild(
+				data.addTriplet_text(subject_uri, predicate_uri, predicate.getChild(
 						0).getValue());
 			} else if (is_object_attr(predicate)) {
 				Attribute attr = predicate.getAttribute("resource",
 						"http://www.w3.org/1999/02/22-rdf-syntax-ns#");
 				String object_uri = attr.getValue();
-				data.addTriplet(subject_uri, predicate_uri, object_uri);
+				data.addTriplet_text(subject_uri, predicate_uri, object_uri);
 
 			} else {
 				Elements objects = predicate.getChildElements();
 				for (int j = 0; j < objects.size(); j++) {
 					Element object = objects.get(j);
 					String object_uri = extractURI(object);
-					data.addTriplet(subject_uri, predicate_uri, object_uri);
+					data.addTriplet_uri(subject_uri, predicate_uri, object_uri);
 					parseTriplet(object);
 				}
 			}

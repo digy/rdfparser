@@ -1,6 +1,8 @@
 package unibz.it.edu;
 
 public class RDFTriplet {
+
+
 	private final RDFObject subject;
 	private final RDFObject predicate;
 	private final RDFObject object;
@@ -27,6 +29,17 @@ public class RDFTriplet {
 		final RDFTriplet other = (RDFTriplet) obj;
 		
 		return ((subject.equals(other.subject)) && (predicate.equals(other.predicate)) && (object.equals(other.object)));
+	}
+	public RDFObject getSubject() {
+		return subject;
+	}
+
+	public RDFObject getPredicate() {
+		return predicate;
+	}
+
+	public RDFObject getObject() {
+		return object;
 	}
 
 }
