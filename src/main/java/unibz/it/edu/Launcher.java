@@ -2,6 +2,10 @@ package unibz.it.edu;
 
 import java.io.File;
 
+import unibz.it.edu.parsers.RDFParser;
+import unibz.it.edu.parsers.TurtleParser;
+import unibz.it.edu.rdfElements.RDFGraph;
+
 public class Launcher {
 
 	public static void main(String args[]) {

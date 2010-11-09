@@ -2,6 +2,9 @@ package unibz.it.edu;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import unibz.it.edu.parsers.TurtleParser;
+import unibz.it.edu.rdfElements.RDFGraph;
 import static org.junit.Assert.assertEquals;
 
 

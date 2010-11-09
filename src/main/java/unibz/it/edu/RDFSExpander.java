@@ -2,6 +2,12 @@ package unibz.it.edu;
 
 import java.util.List;
 
+import unibz.it.edu.rdfElements.RDFGraph;
+import unibz.it.edu.rdfElements.RDFLiteral;
+import unibz.it.edu.rdfElements.RDFObject;
+import unibz.it.edu.rdfElements.RDFTriplet;
+import unibz.it.edu.rdfElements.RDFUri;
+
 /**
  * Expands the RDF graph with entailed RDFS triplets
  * 
@@ -131,7 +137,7 @@ public class RDFSExpander extends RDFExpander {
 			RDFObject obj = trp.getObject();
 			RDFTriplet _type = new RDFTriplet(obj, new RDFUri(rdfns
 					+ "rdf:type"), new RDFUri(rdfsns + "rdfs:Literal"));
-			if ((obj instanceof RDFText) && (!triples.contains(_type))) {
+			if ((obj instanceof RDFLiteral) && (!triples.contains(_type))) {
 				triples.add(_type);
 				return true;
 			}

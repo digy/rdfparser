@@ -1,7 +1,11 @@
-package unibz.it.edu;
+package unibz.it.edu.parsers;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import unibz.it.edu.rdfElements.RDFGraph;
 
 import nu.xom.Attribute;
 import nu.xom.Builder;
@@ -32,6 +36,17 @@ public class RDFParser {
 			Builder parser = new Builder();
 			Document doc = parser.build(file);
 			Element root = doc.getRootElement();
+
+			// Getting all namespaces
+			int nsCount = root.getNamespaceDeclarationCount();
+			Map<String, String> ns = new HashMap<String, String>(nsCount);
+
+			for (int i = 0; i < nsCount; ++i) {
+				String prefix_name = root.getNamespacePrefix(i);
+				String full_name = root.getNamespaceURI(prefix_name);
+				ns.put(prefix_name, full_name);
+			}
+			data.setNamespaces(ns);
 			Elements subjects = root.getChildElements();
 			for (int i = 0; i < subjects.size(); i++) {
 				Element subject = subjects.get(i);
@@ -43,7 +58,6 @@ public class RDFParser {
 			System.err.println("Could not read file");
 		}
 		return data;
-
 	}
 
 	private void parseTriplet(Element subject) {
@@ -52,6 +66,12 @@ public class RDFParser {
 		parseInnerNodes(subject);
 	}
 
+	/**
+	 * Attributes inside subject element form predicates, excluding rdf:about.
+	 * Values of the attributes are interpreted as literals (XXX not sure)
+	 * 
+	 * @param subject
+	 */
 	private void parseAttributes(Element subject) {
 		String subject_uri = extractURI(subject);
 
@@ -77,13 +97,13 @@ public class RDFParser {
 					+ predicate.getLocalName();
 
 			if (is_object_text(predicate)) {
-				data.addTriplet_text(subject_uri, predicate_uri, predicate.getChild(
-						0).getValue());
+				data.addTriplet_text(subject_uri, predicate_uri, predicate
+						.getChild(0).getValue());
 			} else if (is_object_attr(predicate)) {
 				Attribute attr = predicate.getAttribute("resource",
 						"http://www.w3.org/1999/02/22-rdf-syntax-ns#");
 				String object_uri = attr.getValue();
-				data.addTriplet_text(subject_uri, predicate_uri, object_uri);
+				data.addTriplet_uri(subject_uri, predicate_uri, object_uri);
 
 			} else {
 				Elements objects = predicate.getChildElements();
@@ -116,15 +136,14 @@ public class RDFParser {
 	private String extractURI(Element element) {
 		Attribute attr = element.getAttribute("about",
 				"http://www.w3.org/1999/02/22-rdf-syntax-ns#");
-		String value = attr.getValue();
-
-		// Dirty hack for xml:base, not all URI are http://
-		if (!value.startsWith("http://")) {
-			value = element.getBaseURI() + value;
-		}
-		return value;
+		return attr.getValue();
 	}
 
+	/**
+	 * Output @param data as an RDF/XML document
+	 * 
+	 * @param data
+	 */
 	public static void encode(RDFGraph data) {
 
 	}

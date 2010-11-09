@@ -1,4 +1,5 @@
-package unibz.it.edu;
+package unibz.it.edu.rdfElements;
+
 
 public class RDFTriplet {
 

@@ -2,6 +2,11 @@ package unibz.it.edu;
 
 import java.util.List;
 
+import unibz.it.edu.rdfElements.RDFGraph;
+import unibz.it.edu.rdfElements.RDFObject;
+import unibz.it.edu.rdfElements.RDFTriplet;
+import unibz.it.edu.rdfElements.RDFUri;
+
 /**
  * Expands the simple triple graph with entailed RDF triplets
  * 

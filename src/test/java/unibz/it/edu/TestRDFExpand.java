@@ -5,6 +5,10 @@ import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import unibz.it.edu.rdfElements.RDFGraph;
+import unibz.it.edu.rdfElements.RDFTriplet;
+import unibz.it.edu.rdfElements.RDFUri;
+
 public class TestRDFExpand {
 	
 	private static RDFGraphData test_data;

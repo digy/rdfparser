@@ -9,6 +9,9 @@ import java.net.URISyntaxException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import unibz.it.edu.parsers.RDFParser;
+import unibz.it.edu.rdfElements.RDFGraph;
+
 public class TestRDFParse {
 	
 	private static RDFGraphData test_data;
@@ -25,16 +28,7 @@ public class TestRDFParse {
 		
 		assertEquals(get_data.getTriplets(), test_data.basic1);
 	}
-	
-	
-	@Test
-	public void test_xml_base() {
-		RDFParser rdf = new RDFParser();
-		RDFGraph get_data = rdf.decode(new File("basic1_1.xml"));
 		
-		assertEquals(get_data.getTriplets(), test_data.basic1 );
-	}
-	
 	@Test
 	public void test_text_literal() {
 		RDFParser rdf = new RDFParser();

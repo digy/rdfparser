@@ -1,7 +1,11 @@
-package unibz.it.edu;
+package unibz.it.edu.parsers;
 
 import java.io.File;
 import java.util.List;
+
+import unibz.it.edu.rdfElements.RDFGraph;
+import unibz.it.edu.rdfElements.RDFObject;
+import unibz.it.edu.rdfElements.RDFTriplet;
 
 public class TurtleParser {
 	
