@@ -25,7 +25,7 @@ public class RDFGraph {
 		RDFUri _p = new RDFUri(p);
 		RDFLiteral _o = new RDFLiteral(o);
 		
-		for (String name : ns.values()) {
+		for (String name : ns.keySet()) {
 			if (s.startsWith(name)) {
 				_s = new RDFUri(s.substring(name.length()), name);
 			}
@@ -42,7 +42,7 @@ public class RDFGraph {
 		RDFUri _p = new RDFUri(p);
 		RDFUri _o = new RDFUri(o);
 		
-		for (String name : ns.values()) {
+		for (String name : ns.keySet()) {
 			if (s.startsWith(name)) {
 				_s = new RDFUri(s.substring(name.length()), name);
 			}
@@ -58,6 +58,10 @@ public class RDFGraph {
 
 	public void setNamespaces(Map<String, String> ns) {
 		this.ns = ns;
+	}
+	
+	public Map<String, String> getNamespaces() {
+		return this.ns;
 	}
 	
 	public List<RDFTriplet> getTriplets() {

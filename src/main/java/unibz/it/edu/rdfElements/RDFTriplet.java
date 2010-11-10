@@ -4,13 +4,13 @@ package unibz.it.edu.rdfElements;
 public class RDFTriplet {
 
 
-	private final RDFObject subject;
-	private final RDFObject predicate;
+	private final RDFUri subject;
+	private final RDFUri predicate;
 	private final RDFObject object;
 
 	public RDFTriplet(RDFObject s, RDFObject p, RDFObject o) {
-		subject = s;
-		predicate = p;
+		subject = (RDFUri) s;
+		predicate = (RDFUri) p;
 		object = o;
 	}
 
@@ -31,11 +31,11 @@ public class RDFTriplet {
 		
 		return ((subject.equals(other.subject)) && (predicate.equals(other.predicate)) && (object.equals(other.object)));
 	}
-	public RDFObject getSubject() {
+	public RDFUri getSubject() {
 		return subject;
 	}
 
-	public RDFObject getPredicate() {
+	public RDFUri getPredicate() {
 		return predicate;
 	}
 

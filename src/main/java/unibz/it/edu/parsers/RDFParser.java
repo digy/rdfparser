@@ -44,7 +44,7 @@ public class RDFParser {
 			for (int i = 0; i < nsCount; ++i) {
 				String prefix_name = root.getNamespacePrefix(i);
 				String full_name = root.getNamespaceURI(prefix_name);
-				ns.put(prefix_name, full_name);
+				ns.put(full_name, prefix_name);
 			}
 			data.setNamespaces(ns);
 			Elements subjects = root.getChildElements();

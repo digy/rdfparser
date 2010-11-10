@@ -22,8 +22,8 @@ public class Launcher {
 		}
 		RDFParser rdf = new RDFParser();
 		RDFGraph data = rdf.decode(file);
-		RDFSExpander exp = new RDFSExpander();
-		exp.expand(data);
+//		RDFSExpander exp = new RDFSExpander();
+//		exp.expand(data);
 		
 		System.out.println(TurtleParser.encode(data).toString());
 

@@ -18,6 +18,11 @@ public class RDFUri extends RDFObject {
 	}
 	
 	@Override
+	public int hashCode() {
+		return value.hashCode() + namespace.hashCode();
+	}
+	
+	@Override
 	public String toString() {
 		return namespace + value;
 	}

@@ -88,9 +88,9 @@ public class RDFSExpander extends RDFExpander {
 			if (rdf1(data)) {
 				cnt = true;
 			}
-			if (rdfs1(data)) {
-				cnt = true;
-			}
+//			if (rdfs1(data)) {
+//				cnt = true;
+//			}
 			if (rdfs2(data)) {
 				cnt = true;
 			}
@@ -131,19 +131,21 @@ public class RDFSExpander extends RDFExpander {
 	 * @param data
 	 * @return
 	 */
-	private boolean rdfs1(RDFGraph data) {
-		List<RDFTriplet> triples = data.getTriplets();
-		for (RDFTriplet trp : triples) {
-			RDFObject obj = trp.getObject();
-			RDFTriplet _type = new RDFTriplet(obj, new RDFUri(rdfns
-					+ "rdf:type"), new RDFUri(rdfsns + "rdfs:Literal"));
-			if ((obj instanceof RDFLiteral) && (!triples.contains(_type))) {
-				triples.add(_type);
-				return true;
-			}
-		}
-		return false;
-	}
+//	private boolean rdfs1(RDFGraph data) {
+//		List<RDFTriplet> triples = data.getTriplets();
+//		for (RDFTriplet trp : triples) {
+//			RDFObject obj = trp.getObject();
+//			if (obj instanceof RDFLiteral) {
+//				RDFTriplet _type = new RDFTriplet(obj, new RDFUri("type", rdfns),
+//						new RDFUri("Literal", rdfsns));
+//				if (!triples.contains(_type)) {
+//					triples.add(_type);
+//					return true;
+//				}
+//			}
+//		}
+//		return false;
+//	}
 
 	private boolean rdfs2(RDFGraph data) {
 		List<RDFTriplet> triples = data.getTriplets();

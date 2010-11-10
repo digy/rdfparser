@@ -3,7 +3,6 @@ package unibz.it.edu;
 import java.util.List;
 
 import unibz.it.edu.rdfElements.RDFGraph;
-import unibz.it.edu.rdfElements.RDFObject;
 import unibz.it.edu.rdfElements.RDFTriplet;
 import unibz.it.edu.rdfElements.RDFUri;
 
@@ -28,14 +27,14 @@ public class RDFExpander extends AbstractExpander {
 	public void build_axioms(){	
 		for (int i=0; i < rdf_property_names.length; ++i) {
 			axiomatic_tiplets.add(new RDFTriplet(
-					new RDFUri(rdfns + "rdf:" + rdf_property_names[i]),
-					new RDFUri(rdfns + "rdf:type"),
-					new RDFUri(rdfns + "rdf:Property")));	
+					new RDFUri(rdf_property_names[i], rdfns),
+					new RDFUri("type", rdfns),
+					new RDFUri("Property", rdfns)));	
 		}
 		axiomatic_tiplets.add(new RDFTriplet(
-				new RDFUri(rdfns + "rdf:nil"),
-				new RDFUri(rdfns + "rdf:type"),
-				new RDFUri(rdfns + "rdf:List")));
+				new RDFUri("nil", rdfns),
+				new RDFUri("type", rdfns),
+				new RDFUri("List", rdfns)));
 	}
 	
 	@Override
@@ -57,8 +56,8 @@ public class RDFExpander extends AbstractExpander {
 	protected boolean rdf1(RDFGraph data) {
 		List<RDFTriplet> triplets = data.getTriplets();
 		for (RDFTriplet trp : triplets) {
-			RDFObject pred = trp.getPredicate();
-			RDFTriplet _type = new RDFTriplet(pred, new RDFUri(rdfns+"rdf:type"), new RDFUri(rdfns+"rdf:Property"));
+			RDFUri pred = trp.getPredicate();
+			RDFTriplet _type = new RDFTriplet(pred, new RDFUri("type", rdfns), new RDFUri("Property", rdfns));
 			if (! triplets.contains(_type)) {
 				triplets.add(_type);
 				return true;
