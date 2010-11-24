@@ -5,11 +5,14 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.xml.sax.HandlerBase;
 
 import unibz.it.edu.parsers.RDFParser;
+import unibz.it.edu.parsers.TurtleParser;
 import unibz.it.edu.rdfElements.RDFGraph;
 
 public class TestRDFParse {
@@ -57,6 +60,13 @@ public class TestRDFParse {
 		RDFGraph get_data = rdf.decode(new File("basic3_2.xml"));
 		
 		assertEquals(get_data.getTriplets(), test_data.basic3 );
+	}
+	@Test
+	public void test_thaiDish() throws URISyntaxException {
+		RDFParser rdf = new RDFParser();
+		RDFGraph get_data = rdf.decode(new File("vegThaiCurry.xml"));
+		
+		assertEquals(test_data.thai, get_data.getTriplets());
 	}
 	
 
