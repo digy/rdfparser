@@ -93,16 +93,6 @@ public class RDFSExpander extends RDFExpander {
 		}
 	}
 
-	private String append_prefix(String value) {
-		String rv = null;
-		if (value.startsWith("rdf:")) {
-			rv = rdfns + value;
-		} else if (value.startsWith("rdfs:")) {
-			rv = rdfsns + value;
-		}
-		return rv;
-	}
-
 	@Override
 	public void expand(RDFGraph data) {
 		boolean cnt = true;
