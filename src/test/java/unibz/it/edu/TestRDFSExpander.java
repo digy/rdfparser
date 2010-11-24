@@ -8,7 +8,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import unibz.it.edu.rdfElements.RDFGraph;
-import unibz.it.edu.rdfElements.RDFLiteral;
 import unibz.it.edu.rdfElements.RDFTriplet;
 import unibz.it.edu.rdfElements.RDFUri;
 
@@ -41,19 +40,6 @@ public class TestRDFSExpander {
 		assertEquals(true, right_data.getTriplets().contains(_res1));
 		assertEquals(true, right_data.getTriplets().contains(_res2));
 
-	}
-
-	@Test
-	public void test_litera() {
-		RDFGraph right_data = new RDFGraph(new LinkedList<RDFTriplet>(
-				test_data.basic2));
-		RDFSExpander exp = new RDFSExpander();
-		exp.expand(right_data);
-		RDFTriplet _lit = new RDFTriplet(new RDFLiteral(
-				"World Wide Web Consortium"), new RDFUri(rdfns + "rdf:type"),
-				new RDFUri(rdfsns + "rdfs:Literal"));
-
-		assertEquals(true, right_data.getTriplets().contains(_lit));
 	}
 
 	@Test

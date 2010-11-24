@@ -3,7 +3,6 @@ package unibz.it.edu;
 import java.util.List;
 
 import unibz.it.edu.rdfElements.RDFGraph;
-import unibz.it.edu.rdfElements.RDFLiteral;
 import unibz.it.edu.rdfElements.RDFObject;
 import unibz.it.edu.rdfElements.RDFTriplet;
 import unibz.it.edu.rdfElements.RDFUri;
@@ -88,9 +87,7 @@ public class RDFSExpander extends RDFExpander {
 			if (rdf1(data)) {
 				cnt = true;
 			}
-//			if (rdfs1(data)) {
-//				cnt = true;
-//			}
+
 			if (rdfs2(data)) {
 				cnt = true;
 			}
@@ -125,27 +122,6 @@ public class RDFSExpander extends RDFExpander {
 		} while (cnt);
 	}
 
-	/**
-	 * All text strings should have type Literal
-	 * 
-	 * @param data
-	 * @return
-	 */
-//	private boolean rdfs1(RDFGraph data) {
-//		List<RDFTriplet> triples = data.getTriplets();
-//		for (RDFTriplet trp : triples) {
-//			RDFObject obj = trp.getObject();
-//			if (obj instanceof RDFLiteral) {
-//				RDFTriplet _type = new RDFTriplet(obj, new RDFUri("type", rdfns),
-//						new RDFUri("Literal", rdfsns));
-//				if (!triples.contains(_type)) {
-//					triples.add(_type);
-//					return true;
-//				}
-//			}
-//		}
-//		return false;
-//	}
 
 	private boolean rdfs2(RDFGraph data) {
 		List<RDFTriplet> triples = data.getTriplets();
