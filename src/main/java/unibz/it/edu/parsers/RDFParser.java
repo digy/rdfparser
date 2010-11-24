@@ -104,6 +104,8 @@ public class RDFParser {
 						"http://www.w3.org/1999/02/22-rdf-syntax-ns#");
 				String object_uri = attr.getValue();
 				data.addTriplet_uri(subject_uri, predicate_uri, object_uri);
+			} else if (is_blank_node(predicate)) {
+				
 
 			} else {
 				Elements objects = predicate.getChildElements();
@@ -115,6 +117,15 @@ public class RDFParser {
 				}
 			}
 		}
+	}
+	
+	private boolean is_blank_node(Element predicate) {
+		Attribute attr = predicate.getAttribute("parseType", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+		if (attr == null) {
+			return false;
+		}
+		return true;
+		
 	}
 
 	private boolean is_object_text(Element predicate) {
