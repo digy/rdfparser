@@ -28,10 +28,10 @@ public class TestRDFExpand {
 		exp.expand(right_data);
 		RDFTriplet _prop = new RDFTriplet(
 				new RDFUri("http://www.example.org/publishedBy"),
-				new RDFUri(rdfns + "rdf:type"),
-				new RDFUri(rdfns + "rdf:Property"));
+				new RDFUri("type", rdfns),
+				new RDFUri("Property", rdfns));
 		
-		assertEquals(right_data.getTriplets().contains(_prop), true);
+		assertEquals(true, right_data.getTriplets().contains(_prop));
 		
 	}
 
