@@ -16,7 +16,7 @@ public class TestTurtleEncoder {
 	@BeforeClass
 	public static void setup() {
 		test_data = new RDFGraphData();
-		basic1 = "http://semantic-web-book.org/uri http://www.example.org/publishedBy http://crcpress.com/uri .\n";
+		basic1 = "<http://semantic-web-book.org/uri> <http://www.example.org/publishedBy> <http://crcpress.com/uri> .\n";
 	}
 	
 	@Test

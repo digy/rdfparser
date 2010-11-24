@@ -43,10 +43,11 @@ public class TurtleParser {
 			for (RDFTriplet trp: subject_groups.get(sub)) {
 				String pred = toPrefix(trp.getPredicate(), ns);
 				String obj = _toPrefix(trp.getObject(), ns);
+				result.append(" ");
 				result.append(pred);
 				result.append(" ");
 				result.append(obj);
-				result.append(";\n");	
+				result.append(" ;\n");	
 			}
 			result.replace(result.length()-2, result.length()-1, ".");
 		}
