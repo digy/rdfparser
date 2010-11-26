@@ -1,16 +1,14 @@
 package unibz.it.edu.rdfElements;
 
+public class Tripel {
 
-public class RDFTriplet {
-
-
-	private final RDFUri subject;
-	private final RDFUri predicate;
+	private final Uri subject;
+	private final Uri predicate;
 	private final RDFObject object;
 
-	public RDFTriplet(RDFObject s, RDFObject p, RDFObject o) {
-		subject = (RDFUri) s;
-		predicate = (RDFUri) p;
+	public Tripel(RDFObject s, RDFObject p, RDFObject o) {
+		subject = (Uri) s;
+		predicate = (Uri) p;
 		object = o;
 	}
 
@@ -27,15 +25,18 @@ public class RDFTriplet {
 		if (this.getClass() != obj.getClass())
 			return false;
 
-		final RDFTriplet other = (RDFTriplet) obj;
-		
-		return ((subject.equals(other.subject)) && (predicate.equals(other.predicate)) && (object.equals(other.object)));
+		final Tripel other = (Tripel) obj;
+
+		return ((subject.equals(other.subject))
+				&& (predicate.equals(other.predicate)) && (object
+				.equals(other.object)));
 	}
-	public RDFUri getSubject() {
+
+	public Uri getSubject() {
 		return subject;
 	}
 
-	public RDFUri getPredicate() {
+	public Uri getPredicate() {
 		return predicate;
 	}
 

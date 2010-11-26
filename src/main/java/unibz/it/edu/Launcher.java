@@ -2,9 +2,9 @@ package unibz.it.edu;
 
 import java.io.File;
 
-import unibz.it.edu.parsers.RDFParser;
+import unibz.it.edu.parsers.RDFXMLParser;
 import unibz.it.edu.parsers.TurtleParser;
-import unibz.it.edu.rdfElements.RDFGraph;
+import unibz.it.edu.rdfElements.Graph;
 
 public class Launcher {
 
@@ -20,11 +20,11 @@ public class Launcher {
 			System.out.println("File doesn't exist");
 			return;
 		}
-		RDFParser rdf = new RDFParser();
-		RDFGraph data = rdf.decode(file);
-//		RDFSExpander exp = new RDFSExpander();
-//		exp.expand(data);
-		
+		RDFXMLParser rdf = new RDFXMLParser();
+		Graph data = rdf.decode(file);
+		// RDFSExpander exp = new RDFSExpander();
+		// exp.expand(data);
+
 		System.out.println(TurtleParser.encode(data).toString());
 
 	}

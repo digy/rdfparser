@@ -1,17 +1,21 @@
 package unibz.it.edu.rdfElements;
 
-
-public class RDFLiteral extends RDFObject {
-
-	public RDFLiteral(String value) {
-		super(value);
+public class BNode extends RDFObject {
+	
+	public BNode() {
+		super("");
+	}
+	
+	@Override
+	public int hashCode() {
+		return value.hashCode();
 	}
 	
 	@Override
 	public String toString() {
-		return this.value;
+		return value;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null)
@@ -20,9 +24,10 @@ public class RDFLiteral extends RDFObject {
 			return true;
 		if (this.getClass() != obj.getClass())
 			return false;
-
-		final RDFLiteral other = (RDFLiteral) obj;
-		return this.value.equals(other.value);
+		
+		return true;
+		
 	}
+
 
 }

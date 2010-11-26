@@ -1,19 +1,14 @@
 package unibz.it.edu.rdfElements;
 
-public class RDFBlankNode extends RDFObject {
-	
-	public RDFBlankNode() {
-		super("");
+public class Literal extends RDFObject {
+
+	public Literal(String value) {
+		super(value);
 	}
-	
-	@Override
-	public int hashCode() {
-		return value.hashCode();
-	}
-	
+
 	@Override
 	public String toString() {
-		return value;
+		return this.value;
 	}
 
 	@Override
@@ -24,10 +19,9 @@ public class RDFBlankNode extends RDFObject {
 			return true;
 		if (this.getClass() != obj.getClass())
 			return false;
-		
-		return true;
-		
-	}
 
+		final Literal other = (Literal) obj;
+		return this.value.equals(other.value);
+	}
 
 }

@@ -2,10 +2,10 @@ package unibz.it.edu;
 
 import java.util.List;
 
-import unibz.it.edu.rdfElements.RDFGraph;
+import unibz.it.edu.rdfElements.Graph;
 import unibz.it.edu.rdfElements.RDFObject;
-import unibz.it.edu.rdfElements.RDFTriplet;
-import unibz.it.edu.rdfElements.RDFUri;
+import unibz.it.edu.rdfElements.Tripel;
+import unibz.it.edu.rdfElements.Uri;
 
 /**
  * Expands the RDF graph with entailed RDFS triplets
@@ -73,9 +73,8 @@ public class RDFSExpander extends RDFExpander {
 			String obj_name = uri_name(axioms[i][2]);
 			String obj_ns = uri_namespace(axioms[i][2]);
 
-			axiomatic_tiplets.add(new RDFTriplet(new RDFUri(sub_name, sub_ns),
-					new RDFUri(pred_name, pred_ns),
-					new RDFUri(obj_name, obj_ns)));
+			axiomatic_tiplets.add(new Tripel(new Uri(sub_name, sub_ns),
+					new Uri(pred_name, pred_ns), new Uri(obj_name, obj_ns)));
 		}
 
 	}
@@ -94,7 +93,7 @@ public class RDFSExpander extends RDFExpander {
 	}
 
 	@Override
-	public void expand(RDFGraph data) {
+	public void expand(Graph data) {
 		boolean cnt = true;
 		do {
 			cnt = false;
@@ -135,19 +134,19 @@ public class RDFSExpander extends RDFExpander {
 		} while (cnt);
 	}
 
-	private boolean rdfs2(RDFGraph data) {
-		List<RDFTriplet> triples = data.getTriplets();
-		for (RDFTriplet trp : triples) {
+	private boolean rdfs2(Graph data) {
+		List<Tripel> triples = data.getTriplets();
+		for (Tripel trp : triples) {
 			RDFObject sub = trp.getSubject();
 			RDFObject pred = trp.getPredicate();
 			RDFObject obj = trp.getObject();
-			if (pred.equals(new RDFUri(rdfsns + "rdfs:domain"))) {
-				for (RDFTriplet trp2 : triples) {
+			if (pred.equals(new Uri(rdfsns + "rdfs:domain"))) {
+				for (Tripel trp2 : triples) {
 					RDFObject sub2 = trp2.getSubject();
 					RDFObject pred2 = trp2.getPredicate();
 					RDFObject obj2 = trp2.getObject();
-					RDFTriplet _type = new RDFTriplet(sub2, new RDFUri(rdfns
-							+ "rdf:type"), obj);
+					Tripel _type = new Tripel(sub2,
+							new Uri(rdfns + "rdf:type"), obj);
 					if ((pred2.equals(sub)) && (!triples.contains(_type))) {
 						triples.add(_type);
 						return true;
@@ -158,19 +157,19 @@ public class RDFSExpander extends RDFExpander {
 		return false;
 	}
 
-	private boolean rdfs3(RDFGraph data) {
-		List<RDFTriplet> triples = data.getTriplets();
-		for (RDFTriplet trp : triples) {
+	private boolean rdfs3(Graph data) {
+		List<Tripel> triples = data.getTriplets();
+		for (Tripel trp : triples) {
 			RDFObject sub = trp.getSubject();
 			RDFObject pred = trp.getPredicate();
 			RDFObject obj = trp.getObject();
-			if (pred.equals(new RDFUri(rdfsns + "rdfs:range"))) {
-				for (RDFTriplet trp2 : triples) {
+			if (pred.equals(new Uri(rdfsns + "rdfs:range"))) {
+				for (Tripel trp2 : triples) {
 					RDFObject sub2 = trp2.getSubject();
 					RDFObject pred2 = trp2.getPredicate();
 					RDFObject obj2 = trp2.getObject();
-					RDFTriplet _type = new RDFTriplet(obj2, new RDFUri(rdfns
-							+ "rdf:type"), obj);
+					Tripel _type = new Tripel(obj2,
+							new Uri(rdfns + "rdf:type"), obj);
 					if ((pred2.equals(sub)) && (!triples.contains(_type))) {
 						triples.add(_type);
 						return true;
@@ -187,17 +186,17 @@ public class RDFSExpander extends RDFExpander {
 	 * @param data
 	 * @return
 	 */
-	private boolean rdfs4(RDFGraph data) {
-		List<RDFTriplet> triples = data.getTriplets();
-		for (RDFTriplet trp : triples) {
+	private boolean rdfs4(Graph data) {
+		List<Tripel> triples = data.getTriplets();
+		for (Tripel trp : triples) {
 
 			RDFObject sub = trp.getSubject();
 			RDFObject obj = trp.getObject();
 
-			RDFTriplet _res1 = new RDFTriplet(sub, new RDFUri(rdfns
-					+ "rdf:type"), new RDFUri(rdfsns + "rdfs:Resource"));
-			RDFTriplet _res2 = new RDFTriplet(obj, new RDFUri(rdfns
-					+ "rdf:type"), new RDFUri(rdfsns + "rdfs:Resource"));
+			Tripel _res1 = new Tripel(sub, new Uri(rdfns + "rdf:type"),
+					new Uri(rdfsns + "rdfs:Resource"));
+			Tripel _res2 = new Tripel(obj, new Uri(rdfns + "rdf:type"),
+					new Uri(rdfsns + "rdfs:Resource"));
 			if (!triples.contains(_res1)) {
 				triples.add(_res1);
 				return true;
@@ -215,20 +214,20 @@ public class RDFSExpander extends RDFExpander {
 	 * @param data
 	 * @return
 	 */
-	private boolean rdfs5(RDFGraph data) {
-		List<RDFTriplet> triples = data.getTriplets();
-		for (RDFTriplet trp : triples) {
+	private boolean rdfs5(Graph data) {
+		List<Tripel> triples = data.getTriplets();
+		for (Tripel trp : triples) {
 			RDFObject sub = trp.getSubject();
 			RDFObject pred = trp.getPredicate();
 			RDFObject obj = trp.getObject();
-			if (pred.equals(new RDFUri(rdfsns + "rdfs:SubPropertyOf"))) {
-				for (RDFTriplet trp2 : triples) {
+			if (pred.equals(new Uri(rdfsns + "rdfs:SubPropertyOf"))) {
+				for (Tripel trp2 : triples) {
 					RDFObject sub2 = trp2.getSubject();
 					RDFObject pred2 = trp2.getPredicate();
 					RDFObject obj2 = trp2.getObject();
-					RDFTriplet _sub = new RDFTriplet(sub, new RDFUri(rdfsns
+					Tripel _sub = new Tripel(sub, new Uri(rdfsns
 							+ "rdfs:SubPropertyOf"), obj2);
-					if (pred2.equals(new RDFUri(rdfsns + "rdfs:SubPropertyOf"))
+					if (pred2.equals(new Uri(rdfsns + "rdfs:SubPropertyOf"))
 							&& obj.equals(sub2) && !triples.contains(_sub)) {
 						triples.add(_sub);
 						return true;
@@ -239,17 +238,17 @@ public class RDFSExpander extends RDFExpander {
 		return false;
 	}
 
-	private boolean rdfs6(RDFGraph data) {
-		List<RDFTriplet> triples = data.getTriplets();
-		for (RDFTriplet trp : triples) {
+	private boolean rdfs6(Graph data) {
+		List<Tripel> triples = data.getTriplets();
+		for (Tripel trp : triples) {
 			RDFObject sub = trp.getSubject();
 			RDFObject pred = trp.getPredicate();
 			RDFObject obj = trp.getObject();
-			RDFTriplet _sub = new RDFTriplet(sub, new RDFUri(rdfsns
-					+ "rdfs:subPropertyOf"), sub);
+			Tripel _sub = new Tripel(sub,
+					new Uri(rdfsns + "rdfs:subPropertyOf"), sub);
 
-			if (pred.equals(new RDFUri(rdfns + "rdf:type"))
-					&& obj.equals(new RDFUri(rdfns + "rdf:Property"))
+			if (pred.equals(new Uri(rdfns + "rdf:type"))
+					&& obj.equals(new Uri(rdfns + "rdf:Property"))
 					&& !triples.contains(_sub)) {
 				triples.add(_sub);
 				return true;
@@ -258,18 +257,18 @@ public class RDFSExpander extends RDFExpander {
 		return false;
 	}
 
-	private boolean rdfs7(RDFGraph data) {
-		List<RDFTriplet> triples = data.getTriplets();
-		for (RDFTriplet trp : triples) {
+	private boolean rdfs7(Graph data) {
+		List<Tripel> triples = data.getTriplets();
+		for (Tripel trp : triples) {
 			RDFObject sub = trp.getSubject();
 			RDFObject pred = trp.getPredicate();
 			RDFObject obj = trp.getObject();
-			if (pred.equals(new RDFUri(rdfsns + "rdfs:subPropertyOf"))) {
-				for (RDFTriplet trp2 : triples) {
+			if (pred.equals(new Uri(rdfsns + "rdfs:subPropertyOf"))) {
+				for (Tripel trp2 : triples) {
 					RDFObject sub2 = trp2.getSubject();
 					RDFObject pred2 = trp2.getPredicate();
 					RDFObject obj2 = trp2.getObject();
-					RDFTriplet _subprop = new RDFTriplet(sub2, obj, obj2);
+					Tripel _subprop = new Tripel(sub2, obj, obj2);
 					if (sub.equals(pred2) && !triples.contains(_subprop)) {
 						triples.add(_subprop);
 						return true;
@@ -280,16 +279,16 @@ public class RDFSExpander extends RDFExpander {
 		return false;
 	}
 
-	private boolean rdfs8(RDFGraph data) {
-		List<RDFTriplet> triples = data.getTriplets();
-		for (RDFTriplet trp : triples) {
+	private boolean rdfs8(Graph data) {
+		List<Tripel> triples = data.getTriplets();
+		for (Tripel trp : triples) {
 			RDFObject sub = trp.getSubject();
 			RDFObject pred = trp.getPredicate();
 			RDFObject obj = trp.getObject();
-			RDFTriplet _subclass = new RDFTriplet(sub, new RDFUri(rdfsns
-					+ "rdfs:subClassOf"), new RDFUri(rdfns + "rdfs:Resource"));
-			if (pred.equals(new RDFUri(rdfns + "rdf:type"))
-					&& obj.equals(new RDFUri(rdfsns + "rdfs:Class"))
+			Tripel _subclass = new Tripel(sub, new Uri(rdfsns
+					+ "rdfs:subClassOf"), new Uri(rdfns + "rdfs:Resource"));
+			if (pred.equals(new Uri(rdfns + "rdf:type"))
+					&& obj.equals(new Uri(rdfsns + "rdfs:Class"))
 					&& !triples.contains(_subclass)) {
 				triples.add(_subclass);
 				return true;
@@ -298,20 +297,20 @@ public class RDFSExpander extends RDFExpander {
 		return false;
 	}
 
-	private boolean rdfs9(RDFGraph data) {
-		List<RDFTriplet> triples = data.getTriplets();
-		for (RDFTriplet trp : triples) {
+	private boolean rdfs9(Graph data) {
+		List<Tripel> triples = data.getTriplets();
+		for (Tripel trp : triples) {
 			RDFObject sub = trp.getSubject();
 			RDFObject pred = trp.getPredicate();
 			RDFObject obj = trp.getObject();
-			if (pred.equals(new RDFUri(rdfsns + "rdfs:subClassOf"))) {
-				for (RDFTriplet trp2 : triples) {
+			if (pred.equals(new Uri(rdfsns + "rdfs:subClassOf"))) {
+				for (Tripel trp2 : triples) {
 					RDFObject sub2 = trp2.getSubject();
 					RDFObject pred2 = trp2.getPredicate();
 					RDFObject obj2 = trp2.getObject();
-					RDFTriplet _type = new RDFTriplet(sub2, new RDFUri(rdfns
-							+ "rdf:type"), obj);
-					if (pred2.equals(new RDFUri(rdfns + "rdf:type"))
+					Tripel _type = new Tripel(sub2,
+							new Uri(rdfns + "rdf:type"), obj);
+					if (pred2.equals(new Uri(rdfns + "rdf:type"))
 							&& obj2.equals(sub) && !triples.contains(_type)) {
 						triples.add(_type);
 						return true;
@@ -322,16 +321,16 @@ public class RDFSExpander extends RDFExpander {
 		return false;
 	}
 
-	private boolean rdfs10(RDFGraph data) {
-		List<RDFTriplet> triples = data.getTriplets();
-		for (RDFTriplet trp : triples) {
+	private boolean rdfs10(Graph data) {
+		List<Tripel> triples = data.getTriplets();
+		for (Tripel trp : triples) {
 			RDFObject sub = trp.getSubject();
 			RDFObject pred = trp.getPredicate();
 			RDFObject obj = trp.getObject();
-			RDFTriplet _subclass = new RDFTriplet(sub, new RDFUri(rdfsns
+			Tripel _subclass = new Tripel(sub, new Uri(rdfsns
 					+ "rdfs:subClassOf"), sub);
-			if (pred.equals(new RDFUri(rdfns + "rdf:type"))
-					&& obj.equals(new RDFUri(rdfsns + "rdfs:Class"))
+			if (pred.equals(new Uri(rdfns + "rdf:type"))
+					&& obj.equals(new Uri(rdfsns + "rdfs:Class"))
 					&& !triples.contains(_subclass)) {
 				triples.add(_subclass);
 				return true;
@@ -340,20 +339,20 @@ public class RDFSExpander extends RDFExpander {
 		return false;
 	}
 
-	private boolean rdfs11(RDFGraph data) {
-		List<RDFTriplet> triples = data.getTriplets();
-		for (RDFTriplet trp : triples) {
+	private boolean rdfs11(Graph data) {
+		List<Tripel> triples = data.getTriplets();
+		for (Tripel trp : triples) {
 			RDFObject sub = trp.getSubject();
 			RDFObject pred = trp.getPredicate();
 			RDFObject obj = trp.getObject();
-			if (pred.equals(new RDFUri(rdfsns + "rdfs:subClassOf"))) {
-				for (RDFTriplet trp2 : triples) {
+			if (pred.equals(new Uri(rdfsns + "rdfs:subClassOf"))) {
+				for (Tripel trp2 : triples) {
 					RDFObject sub2 = trp2.getSubject();
 					RDFObject pred2 = trp2.getPredicate();
 					RDFObject obj2 = trp2.getObject();
-					RDFTriplet _ss = new RDFTriplet(sub, new RDFUri(rdfsns
+					Tripel _ss = new Tripel(sub, new Uri(rdfsns
 							+ "rdfs:subClassOf"), obj2);
-					if (pred2.equals(new RDFUri(rdfsns + "rdfs:subClassOf"))
+					if (pred2.equals(new Uri(rdfsns + "rdfs:subClassOf"))
 							&& !triples.contains(_ss)) {
 						triples.add(_ss);
 						return true;

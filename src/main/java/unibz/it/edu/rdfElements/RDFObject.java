@@ -7,10 +7,9 @@ public abstract class RDFObject {
 	public RDFObject(String value) {
 		this.value = value;
 	}
-	
+
 	public String getValue() {
 		return this.value;
 	}
-
 
 }
