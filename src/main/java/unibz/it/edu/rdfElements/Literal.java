@@ -1,9 +1,25 @@
 package unibz.it.edu.rdfElements;
 
 public class Literal extends RDFObject {
+	private Uri datatype;
+	private String lang;
 
 	public Literal(String value) {
 		super(value);
+	}
+	
+	
+	public void setDatatype(Uri value) {
+		this.datatype = value;
+	}
+	public Uri getDatatype() {
+		return this.datatype;
+	}
+	public void setLang(String lang) {
+		this.lang = lang;
+	}
+	public String getLang() {
+		return this.lang;
 	}
 
 	@Override

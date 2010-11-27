@@ -14,6 +14,11 @@ import nu.xom.ParsingException;
 import nu.xom.Text;
 import unibz.it.edu.rdfElements.BNode;
 import unibz.it.edu.rdfElements.Graph;
+import unibz.it.edu.rdfElements.Literal;
+import unibz.it.edu.rdfElements.RDFObject;
+import unibz.it.edu.rdfElements.Uri;
+import unibz.it.edu.terms.Rdf;
+import unibz.it.edu.terms.XML;
 
 public class RDFXMLParser {
 	private Graph data;
@@ -43,7 +48,7 @@ public class RDFXMLParser {
 			Elements subjects = root.getChildElements();
 			for (int i = 0; i < subjects.size(); i++) {
 				Element subject = subjects.get(i);
-				parseTriplet(subject);
+				parseSubject(subject);
 			}
 		} catch (ParsingException ex) {
 			System.err.println("Malformed XML");
@@ -52,9 +57,10 @@ public class RDFXMLParser {
 		}
 		return data;
 	}
-	
+
 	/**
 	 * Adds namespaces and their prefixes to RDFGraph element
+	 * 
 	 * @param root
 	 */
 	private void parseNamespaces(Element root) {
@@ -64,140 +70,134 @@ public class RDFXMLParser {
 		for (int i = 0; i < nsCount; ++i) {
 			String prefix_name = root.getNamespacePrefix(i);
 			String full_name = root.getNamespaceURI(prefix_name);
-			ns.put(full_name, prefix_name);
+			ns.put(prefix_name, full_name);
 		}
 		data.setNamespaces(ns);
 	}
 
-	private void parseTriplet(Element subject) {
+	private RDFObject parseSubject(Element subject) {
+		RDFObject s = null;
+		
+		if (subject.getAttribute("about", Rdf.ns) != null) {
+			s = new Uri(subject.getAttributeValue("about", Rdf.ns));
+		} else {
+			s = new BNode();
+		}
+		if (! (subject.getNamespaceURI().equals(Rdf.ns) &&
+				subject.getLocalName().equals("Description"))) {
+			data.addTriple(s, Rdf.type, new Uri(subject.getNamespaceURI()+subject.getLocalName()));	
+		}
 
-		parseAttributes(subject);
-		parseInnerNodes(subject);
-	}
-
-	/**
-	 * Attributes inside subject element form predicates, excluding rdf:about.
-	 * Values of the attributes are interpreted as literals (XXX not sure)
-	 * 
-	 * @param subject
-	 */
-	private void parseAttributes(Element subject) {
-		String subject_uri = extractURI(subject);
+		String lang = subject.getAttributeValue("lang", XML.ns);
 
 		for (int i = 0; i < subject.getAttributeCount(); i++) {
 			Attribute attr = subject.getAttribute(i);
-			System.out.println(attr.getQualifiedName());
-			if (!attr.getNamespaceURI().equals("http://www.w3.org/1999/02/22-rdf-syntax-ns#")&&
-					!attr.getLocalName().equals("about")) {
-				String object_uri = attr.getValue();
-				String predicate_uri = attr.getNamespaceURI()
-						+ attr.getLocalName();
-				data.addTriplet_text(subject_uri, predicate_uri, object_uri);
+			if (!attr.getNamespaceURI().equals(Rdf.ns)&&
+					!attr.getNamespaceURI().equals(XML.ns)) {
+				
+				Uri p = new Uri(attr.getNamespaceURI() + attr.getLocalName());
+				Literal o = new Literal(attr.getValue());
+				o.setLang(lang);
+				data.addTriple(s, p, o);
 			}
 		}
-	}
-
-	private void parseInnerNodes(Element subject) {
-		String subject_uri = extractURI(subject);
-
+		
+		
 		Elements predicates = subject.getChildElements();
 		for (int i = 0; i < predicates.size(); i++) {
 			Element predicate = predicates.get(i);
-			String predicate_uri = predicate.getNamespaceURI()
-					+ predicate.getLocalName();
+			parsePredicate(s, predicate, i);
+		}
+		return s;
+	}
 
-			if (is_object_text(predicate)) {
-				data.addTriplet_text(subject_uri, predicate_uri, predicate
-						.getChild(0).getValue());
-			} else if (is_object_attr(predicate)) {
-				Attribute attr = predicate.getAttribute("resource",
-						"http://www.w3.org/1999/02/22-rdf-syntax-ns#");
-				String object_uri = attr.getValue();
-				data.addTriplet_uri(subject_uri, predicate_uri, object_uri);
-			} else if (is_blank_node(predicate)) {
-				insert_blank_nodes(subject, predicate);
+	private void parsePredicate(RDFObject s, Element predicate, int siblingCount) {
 
-			} else {
-				Elements objects = predicate.getChildElements();
-				for (int j = 0; j < objects.size(); j++) {
-					Element object = objects.get(j);
-					String object_uri = extractURI(object);
-					data.addTriplet_uri(subject_uri, predicate_uri, object_uri);
-					parseTriplet(object);
+		String uri_name = predicate.getNamespaceURI()
+				+ predicate.getLocalName();
+		Uri p = new Uri(uri_name);
+
+		if (p.equals(Rdf.li)) {
+			p = new Uri(Rdf.ns + String.format("_%s", siblingCount+1));
+		}
+		
+		String resource = predicate.getAttributeValue("resource", Rdf.ns);
+		if (resource != null) {
+			data.addTriple(s, p, new Uri(resource));
+			return;
+		}
+
+		String parseType = predicate.getAttributeValue("parseType", Rdf.ns);
+		if (parseType != null) {
+			if (parseType.equals("Resource")) {
+				// BNode;
+				BNode o = new BNode();
+				data.addTriple(s, p, o);
+				
+				Elements bnodes_predicates = predicate.getChildElements();
+				for (int i = 0; i < bnodes_predicates.size(); ++i) {
+					parsePredicate(o, bnodes_predicates.get(i), i);
 				}
+				
+			} else if (parseType.equals("Literal")) {
+				// XMLLiteral
+				StringBuilder inner_nodes = new StringBuilder();
+				for (int i=0; i < predicate.getChildCount(); ++i) {
+					inner_nodes.append(predicate.getChild(i).toXML());
+				}
+				
+				Literal o = new Literal(inner_nodes.toString());
+				o.setDatatype(Rdf.XMLLiteral);
+				data.addTriple(s, p, o);
+			} else if (parseType.equals("Collection")) {
+				BNode o = new BNode();
+				data.addTriple(s, p, o);
+				
+				Elements collection_elems = predicate.getChildElements();
+				for (int i = 0; i < collection_elems.size(); ++i) {
+					RDFObject elem = parseSubject(collection_elems.get(i));
+					data.addTriple(o, Rdf.first, elem);
+					
+					if (i < collection_elems.size() - 1) {
+						BNode rest = new BNode();
+						data.addTriple(o, Rdf.rest, rest);
+						o = rest;
+					} else {
+						// Last element must be rdf:nill
+						data.addTriple(o, Rdf.rest, Rdf.nil);
+					}
+				}	
+			}
+			return;
+		}
+
+		if (is_object_text(predicate)) {
+			String datatype = predicate.getAttributeValue("datatype", Rdf.ns);
+			Uri dt = null;
+			String lang = null;
+			if (datatype != null) {
+				dt = new Uri(datatype);
+			} else {
+				lang = predicate.getAttributeValue("lang", XML.ns);
+			}
+			Literal o = new Literal(predicate.getChild(0).getValue());
+			o.setDatatype(dt);
+			o.setLang(lang);
+			data.addTriple(s, p, o);
+		} else {
+			Elements objects = predicate.getChildElements();
+			for (int i = 0; i < objects.size(); ++i) {
+				RDFObject o = parseSubject(objects.get(i));
+				data.addTriple(s, p, o);
 			}
 		}
 	}
+
 	
-	private boolean is_blank_node(Element predicate) {
-		Attribute attr = predicate.getAttribute("parseType", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
-		if (attr != null && attr.getValue().equals("Resource")) {
-			return true;
-		}
-		return false;	
-	}
-	private void insert_blank_nodes(Element outer_subject, Element outer_predicate) {
-		String outer_subject_uri = extractURI(outer_subject);
-		String outer_predicate_uri = outer_predicate.getNamespaceURI()
-		+ outer_predicate.getLocalName();
-		
-		BNode bn = data.addTriplet_blank(outer_subject_uri, outer_predicate_uri);
-		
-		Elements predicates = outer_predicate.getChildElements();
-
-		for (int i = 0; i < predicates.size(); i++) {
-			Element predicate = predicates.get(i);
-			String predicate_uri = predicate.getNamespaceURI()
-					+ predicate.getLocalName();
-
-			if (is_object_text(predicate)) {
-				data.addTriplet_text(subject_uri, predicate_uri, predicate
-						.getChild(0).getValue());
-			} else if (is_object_attr(predicate)) {
-				Attribute attr = predicate.getAttribute("resource",
-						"http://www.w3.org/1999/02/22-rdf-syntax-ns#");
-				String object_uri = attr.getValue();
-				data.addTriplet_uri(subject_uri, predicate_uri, object_uri);
-			} else if (is_blank_node(predicate)) {
-				insert_blank_nodes(subject, predicate);
-
-			} else {
-				Elements objects = predicate.getChildElements();
-				for (int j = 0; j < objects.size(); j++) {
-					Element object = objects.get(j);
-					String object_uri = extractURI(object);
-					data.addTriplet_uri(subject_uri, predicate_uri, object_uri);
-					parseTriplet(object);
-				}
-			}
-		}
-		
-		
-	}
-	
-
 	private boolean is_object_text(Element predicate) {
 		return ((predicate.getChildCount() == 1) && (predicate.getChild(0) instanceof Text));
 	}
-
-	private boolean is_object_attr(Element predicate) {
-		Attribute attr = predicate.getAttribute("resource",
-				"http://www.w3.org/1999/02/22-rdf-syntax-ns#");
-		if (attr != null) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Extract the full URI from an Element
-	 **/
-	private String extractURI(Element element) {
-		Attribute attr = element.getAttribute("about",
-				"http://www.w3.org/1999/02/22-rdf-syntax-ns#");
-		return attr.getValue();
-	}
-
+	
 	/**
 	 * Output @param data as an RDF/XML document
 	 * 

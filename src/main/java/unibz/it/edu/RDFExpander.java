@@ -3,45 +3,44 @@ package unibz.it.edu;
 import java.util.List;
 
 import unibz.it.edu.rdfElements.Graph;
-import unibz.it.edu.rdfElements.Tripel;
+import unibz.it.edu.rdfElements.Triple;
 import unibz.it.edu.rdfElements.Uri;
-
+import unibz.it.edu.terms.Rdf;
 /**
  * Expands the simple triple graph with entailed RDF triplets
  * 
  * @author digy
  * 
  */
-public class RDFExpander extends AbstractExpander {
+public class RDFExpander {
 
-	protected static final String rdfns = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 
-	private static final String[] rdf_property_names = { "type", "subject",
-			"predicate", "object", "first", "rest", "value" };
+	private static final Uri[] rdf_property_names = 
+	{ Rdf.type, Rdf.subject, Rdf.predicate, Rdf.first, Rdf.rest, Rdf.value };
 
-	public RDFExpander() {
-		super();
-	}
 
-	@Override
-	public void build_axioms() {
+	/**
+	 * Expand the graph with the axiomatic triples
+	 * @param data
+	 * @return
+	 */
+	public Graph exapnd_axioms(Graph data) {
+		
 		for (int i = 0; i < rdf_property_names.length; ++i) {
-			axiomatic_tiplets
-					.add(new Tripel(new Uri(rdf_property_names[i], rdfns),
-							new Uri("type", rdfns), new Uri("Property", rdfns)));
+			data.addTriple(rdf_property_names[i], Rdf.type, Rdf.Property);
 		}
-		axiomatic_tiplets.add(new Tripel(new Uri("nil", rdfns), new Uri("type",
-				rdfns), new Uri("List", rdfns)));
+		data.addTriple(Rdf.nil, Rdf.type, Rdf.List);
+		return data;
 	}
 
-	@Override
-	public void expand(Graph data) {
-		add_axioms(data);
+	public Graph expand(Graph data) {
+
 		boolean rule_applied = false;
 		do {
 			rule_applied = rdf1(data);
 
 		} while (rule_applied);
+		return data;
 	}
 
 	/**
@@ -53,11 +52,10 @@ public class RDFExpander extends AbstractExpander {
 	 *         to the graph
 	 */
 	protected boolean rdf1(Graph data) {
-		List<Tripel> triplets = data.getTriplets();
-		for (Tripel trp : triplets) {
+		List<Triple> triplets = data.getTriples();
+		for (Triple trp : triplets) {
 			Uri pred = trp.getPredicate();
-			Tripel _type = new Tripel(pred, new Uri("type", rdfns), new Uri(
-					"Property", rdfns));
+			Triple _type = new Triple(pred, Rdf.type, Rdf.Property);
 			if (!triplets.contains(_type)) {
 				triplets.add(_type);
 				return true;
@@ -65,5 +63,4 @@ public class RDFExpander extends AbstractExpander {
 		}
 		return false;
 	}
-
 }

@@ -1,30 +1,19 @@
 package unibz.it.edu.rdfElements;
 
 public class Uri extends RDFObject {
-	private String namespace;
 
 	public Uri(String value) {
 		super(value);
-		this.namespace = "";
-	}
-
-	public Uri(String value, String namespace) {
-		super(value);
-		this.namespace = namespace;
-	}
-
-	public String getNamespace() {
-		return this.namespace;
 	}
 
 	@Override
 	public int hashCode() {
-		return value.hashCode() + namespace.hashCode();
+		return value.hashCode();
 	}
 
 	@Override
 	public String toString() {
-		return namespace + value;
+		return value;
 	}
 
 	@Override
@@ -37,7 +26,7 @@ public class Uri extends RDFObject {
 			return false;
 
 		final Uri other = (Uri) obj;
-		return this.toString().equals(other.toString());
+		return this.value.equals(other.value);
 
 	}
 
