@@ -1,0 +1,16 @@
+<http://www.example.org/uri> <http://example.org/name> "John" .
+<http://www.example.org/uri> <http://example.org/age> "10" .
+<http://www.example.org/uri> <http://example.org/proffesion> <http://www.example.org/pro> .
+<http://www.example.org/pro> <http://example.org/description> "Very Interesting Job " .
+<http://www.example.org/uri> <http://example.org/name> _:1 .
+_:2 <http://example.org/name> "John" .
+<http://www.example.org/uri> <http://example.org/age> _:3 .
+_:2 <http://example.org/age> "10" .
+<http://www.example.org/uri> <http://example.org/proffesion> _:4 .
+_:2 <http://example.org/proffesion> <http://www.example.org/pro> .
+<http://www.example.org/pro> <http://example.org/description> _:5 .
+_:4 <http://example.org/description> "Very Interesting Job " .
+_:2 <http://example.org/name> _:1 .
+_:2 <http://example.org/age> _:3 .
+_:2 <http://example.org/proffesion> _:4 .
+_:4 <http://example.org/description> _:5 .

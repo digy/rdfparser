@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 
 import org.junit.Test;
 
+import unibz.it.edu.entailment.SimpleEntailemnt;
 import unibz.it.edu.parsers.RDFXMLParser;
 import unibz.it.edu.parsers.TurtleParser;
 import unibz.it.edu.rdfElements.BNode;
@@ -23,85 +24,125 @@ public class W3C_Tester {
 	public void test_amp_in_url() throws IOException {
 		test_parse("amp-in-url");
 	}
+
 	@Test
 	public void test_datatypes() throws IOException {
 		test_parse("datatypes");
 	}
+
 	@Test
 	public void test_rdf_xmllang() throws IOException {
 		test_parse("rdfms-xmllang");
 	}
+
 	@Test
 	public void test_xml_attrs() throws IOException {
 		test_parse("unrecognised-xml-attributes");
 	}
+
 	@Test
 	public void test_xml_canon() throws IOException {
 		test_parse("xml-canon");
 	}
+
 	@Test
 	public void test_rdf_containers_syntax_vs_schema() throws IOException {
 		test_parse("rdf-containers-syntax-vs-schema");
 	}
+
 	@Test
 	public void test_rdfms_identity_anon_resources() throws IOException {
 		test_parse("rdfms-identity-anon-resources");
 	}
+
 	@Test
 	public void test_rdfms_para196() throws IOException {
 		test_parse("rdfms-para196");
 	}
+
 	@Test
 	public void test_rdfms_rdf_names_use() throws IOException {
 		test_parse("rdfms-rdf-names-use");
 	}
-	
+
 	@Test
 	public void test_rdfms_seq_representation() throws IOException {
 		test_parse("rdfms-seq-representation");
 	}
+
 	@Test
 	public void test_rdfs_domain_and_range() throws IOException {
 		test_parse("rdfs-domain-and-range");
 	}
-	
-	public String[] get_fnames(String dir) {
-		
+
+	public String[][] get_fnames(String dirname) {
+
+		File dir = new File(dirname);
+
+		File[] files = dir.listFiles(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				return (name.endsWith(".rdf") && name.startsWith("test"));
+			}
+		});
+
+		String[][] rv = new String[files.length][2];
+
+		for (int i = 0; i < files.length; ++i) {
+			File in_file = files[i];
+
+			String result_name = in_file.getAbsolutePath().split("\\.")[0]
+					+ ".nt";
+			rv[i][0] = in_file.getAbsolutePath();
+			rv[i][1] = result_name;
+		}
+		return rv;
 	}
-	
 
 	public void test_parse(String dirname) throws IOException {
-		
-		File dir = new File("w3c_tests/" + dirname);
-		
-		File [] files = dir.listFiles(new FilenameFilter() {
-		    @Override
-		    public boolean accept(File dir, String name) {
-		        return (name.endsWith(".rdf") && name.startsWith("test"));
-		    }
-		});
-		
-		if (files == null) {
-			return;
-		}
 
-		for (File in_file : files) {
-			
-			String result_name = in_file.getAbsolutePath().split("\\.")[0] + ".nt";
-			String result_data = readFile(result_name);
+		String[][] files = get_fnames("w3c_tests/" + dirname);
+
+		for (int i = 0; i < files.length; ++i) {
+			String result_data = readFile(files[i][1]);
 			RDFXMLParser parser = new RDFXMLParser();
-			Graph parser_data = parser.decode(in_file);
+			Graph parser_data = parser.decode(new File(files[i][0]));
 			String parser_result = TurtleParser.simpleEncode(parser_data)
 					.toString();
-			System.out.println(in_file.getName() + "##" + parser_result + "###" + result_data);
+			System.out.println(files[i][0] + "##" + parser_result + "###"
+					+ result_data);
 			assertEquals(result_data, parser_result);
 			BNode.bnode_counter = 1;
 		}
+	}
+	
+	
+	public void test_entailment(String dirname) throws IOException {
+		String[][] files = get_fnames(dirname);
 
+		for (int i = 0; i < files.length; ++i) {
+			String result_data = readFile(files[i][1]);
+			RDFXMLParser parser = new RDFXMLParser();
+			Graph parser_data = parser.decode(new File(files[i][0]));
+			SimpleEntailemnt.expand(parser_data);
+			
+			String parser_result = TurtleParser.simpleEncode(parser_data)
+					.toString();
+			System.out.println(files[i][0] + "##" + parser_result + "###"
+					+ result_data);
+			assertEquals(result_data, parser_result);
+			BNode.bnode_counter = 1;
+		}
+	}
+	
+	@Test
+	public void test_simple_entailment() throws IOException {
+		test_entailment("simple_entailment");
 	}
 
 	/**
 	 * Strip comments from result files
+	 * 
 	 * @param path
 	 * @return
 	 * @throws IOException

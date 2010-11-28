@@ -1,0 +1,12 @@
+<http://semantic-web-book.org/uri> <http://example.org/title> "Foundations of Semantic Web Technologies" .
+<http://semantic-web-book.org/uri> <http://example.org/publishedBy> <http://crcpress.com/uri> .
+<http://crcpress.com/uri> <http://example.org/Name> "CRC Press" .
+<http://semantic-web-book.org/uri> <http://example.org/title> _:1 .
+_:2 <http://example.org/title> "Foundations of Semantic Web Technologies" .
+<http://semantic-web-book.org/uri> <http://example.org/publishedBy> _:3 .
+_:2 <http://example.org/publishedBy> <http://crcpress.com/uri> .
+<http://crcpress.com/uri> <http://example.org/Name> _:4 .
+_:3 <http://example.org/Name> "CRC Press" .
+_:2 <http://example.org/title> _:1 .
+_:2 <http://example.org/publishedBy> _:3 .
+_:3 <http://example.org/Name> _:4 .

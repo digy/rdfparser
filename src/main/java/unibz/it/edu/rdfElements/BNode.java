@@ -3,12 +3,15 @@ package unibz.it.edu.rdfElements;
 public class BNode extends RDFObject {
 	public static int bnode_counter = 1;
 	private int id;
+	public RDFObject parent;
 	
 	public BNode() {
-		super("");
-		id = bnode_counter;
-		++bnode_counter;
-		System.out.println("Creating BNODE");
+		super(Integer.toString(bnode_counter++));
+	}
+	
+	public BNode(RDFObject parent) {
+		super(Integer.toString(bnode_counter++));
+		this.parent = parent;
 	}
 	
 	@Override
@@ -18,7 +21,7 @@ public class BNode extends RDFObject {
 	
 	@Override
 	public String toString() {
-		return Integer.toString(id);
+		return value;
 	}
 
 	@Override
@@ -30,6 +33,11 @@ public class BNode extends RDFObject {
 		if (this.getClass() != obj.getClass())
 			return false;
 		
+		final BNode other = (BNode) obj;
+		
+//		if ((this.parent != null) && (other.parent != null)) {
+//			return this.parent.equals(other.parent);
+//		}
 		return true;	
 	}
 }
