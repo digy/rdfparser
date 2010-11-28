@@ -20,6 +20,12 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>9.0-801.jdbc4</version>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<plugins>
@@ -31,19 +37,19 @@
 					<target>1.5</target>
 				</configuration>
 			</plugin>
-       <plugin>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <configuration>
-                <archive>
-                    <manifest>
-                        <mainClass>unibz.it.edu.Launcher</mainClass>
-                    </manifest>
-                </archive>
-                <descriptorRefs>
-                    <descriptorRef>jar-with-dependencies</descriptorRef>
-                </descriptorRefs>
-            </configuration>
-        </plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>unibz.it.edu.Launcher</mainClass>
+						</manifest>
+					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
+			</plugin>
 
 
 			<plugin>
