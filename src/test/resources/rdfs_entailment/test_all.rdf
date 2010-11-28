@@ -1,0 +1,19 @@
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:ex="http://example.org/" >
+
+  <rdf:Property rdf:about= "http://example.org/hasSupervisor">
+    <rdfs:domain rdf:resource="http://example.org/Student"/>
+    <rdfs:range rdf:resource="http://example.org/Professor"/>
+    <rdfs:subPropertyOf rdf:resource="http://example.org/worksFor" />
+  </rdf:Property>
+
+  <rdf:Description rdf:about= "http://example.org/me">
+    <ex:hasSupervisor rdf:resource="http://example.org/ZZZ"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about= "http://example.org/Student">
+    <rdfs:subClassOf rdf:resource="http://example.org/Person" />
+  </rdf:Description>
+</rdf:RDF>
+

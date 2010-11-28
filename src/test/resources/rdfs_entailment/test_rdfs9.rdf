@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:ex="http://example.org/" >
+
+  <rdf:Description rdf:about="http://example.org/u">
+    <rdfs:subClassOf 
+        rdf:resource="http://example.org/v"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://example.org/v">
+    <rdfs:subClassOf 
+        rdf:resource="http://example.org/x"/>
+  </rdf:Description>
+
+  <ex:u rdf:about="http://example.org/1">
+    <ex:rel rdf:resource="http://example.org/range" />
+</ex:u>
+
+  <ex:v rdf:about="http://example.org/2">
+    <ex:rel rdf:resource="http://example.org/range" />
+</ex:v>
+
+  <ex:x rdf:about="http://example.org/3">
+    <ex:rel rdf:resource="http://example.org/range" />
+  </ex:x>
+
+</rdf:RDF>
+

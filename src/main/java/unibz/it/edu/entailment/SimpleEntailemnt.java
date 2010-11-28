@@ -4,10 +4,8 @@ import java.util.List;
 
 import unibz.it.edu.rdfElements.BNode;
 import unibz.it.edu.rdfElements.Graph;
-import unibz.it.edu.rdfElements.Literal;
 import unibz.it.edu.rdfElements.RDFObject;
 import unibz.it.edu.rdfElements.Triple;
-import unibz.it.edu.rdfElements.Uri;
 
 public class SimpleEntailemnt {
 

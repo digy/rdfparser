@@ -3,10 +3,10 @@ package unibz.it.edu.rdfElements;
 public class Triple {
 
 	private final RDFObject subject;
-	private final Uri predicate;
+	private final RDFObject predicate;
 	private final RDFObject object;
 
-	public Triple(RDFObject s, Uri p, RDFObject o) {
+	public Triple(RDFObject s, RDFObject p, RDFObject o) {
 		subject =  s;
 		predicate = p;
 		object = o;
@@ -36,7 +36,7 @@ public class Triple {
 		return subject;
 	}
 
-	public Uri getPredicate() {
+	public RDFObject getPredicate() {
 		return predicate;
 	}
 

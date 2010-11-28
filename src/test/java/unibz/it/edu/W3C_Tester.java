@@ -2,17 +2,11 @@ package unibz.it.edu;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import org.junit.Test;
 
-import unibz.it.edu.entailment.SimpleEntailemnt;
 import unibz.it.edu.parsers.RDFXMLParser;
 import unibz.it.edu.parsers.TurtleParser;
 import unibz.it.edu.rdfElements.BNode;
@@ -75,91 +69,21 @@ public class W3C_Tester {
 		test_parse("rdfs-domain-and-range");
 	}
 
-	public String[][] get_fnames(String dirname) {
 
-		File dir = new File(dirname);
-
-		File[] files = dir.listFiles(new FilenameFilter() {
-			@Override
-			public boolean accept(File dir, String name) {
-				return (name.endsWith(".rdf") && name.startsWith("test"));
-			}
-		});
-
-		String[][] rv = new String[files.length][2];
-
-		for (int i = 0; i < files.length; ++i) {
-			File in_file = files[i];
-
-			String result_name = in_file.getAbsolutePath().split("\\.")[0]
-					+ ".nt";
-			rv[i][0] = in_file.getAbsolutePath();
-			rv[i][1] = result_name;
-		}
-		return rv;
-	}
 
 	public void test_parse(String dirname) throws IOException {
 
-		String[][] files = get_fnames("w3c_tests/" + dirname);
+		String[][] files = Utils.get_fnames("w3c_tests/" + dirname);
 
 		for (int i = 0; i < files.length; ++i) {
-			String result_data = readFile(files[i][1]);
+			String result_data = Utils.readFile(files[i][1]);
 			RDFXMLParser parser = new RDFXMLParser();
 			Graph parser_data = parser.decode(new File(files[i][0]));
 			String parser_result = TurtleParser.simpleEncode(parser_data)
 					.toString();
-			System.out.println(files[i][0] + "##" + parser_result + "###"
-					+ result_data);
 			assertEquals(result_data, parser_result);
 			BNode.bnode_counter = 1;
 		}
-	}
-	
-	
-	public void test_entailment(String dirname) throws IOException {
-		String[][] files = get_fnames(dirname);
-
-		for (int i = 0; i < files.length; ++i) {
-			String result_data = readFile(files[i][1]);
-			RDFXMLParser parser = new RDFXMLParser();
-			Graph parser_data = parser.decode(new File(files[i][0]));
-			SimpleEntailemnt.expand(parser_data);
-			
-			String parser_result = TurtleParser.simpleEncode(parser_data)
-					.toString();
-			System.out.println(files[i][0] + "##" + parser_result + "###"
-					+ result_data);
-			assertEquals(result_data, parser_result);
-			BNode.bnode_counter = 1;
-		}
-	}
-	
-	@Test
-	public void test_simple_entailment() throws IOException {
-		test_entailment("simple_entailment");
-	}
-
-	/**
-	 * Strip comments from result files
-	 * 
-	 * @param path
-	 * @return
-	 * @throws IOException
-	 */
-	private static String readFile(String path) throws IOException {
-		FileInputStream stream = new FileInputStream(new File(path));
-		DataInputStream in = new DataInputStream(stream);
-		BufferedReader br = new BufferedReader(new InputStreamReader(in));
-		String strLine;
-		StringBuilder rv = new StringBuilder();
-		while ((strLine = br.readLine()) != null) {
-			if (!strLine.startsWith("#") && !strLine.trim().equals("")) {
-				rv.append(strLine);
-				rv.append("\n");
-			}
-		}
-		return rv.toString();
 	}
 
 }

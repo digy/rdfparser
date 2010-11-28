@@ -1,8 +1,9 @@
-package unibz.it.edu;
+package unibz.it.edu.entailment;
 
 import java.util.List;
 
 import unibz.it.edu.rdfElements.Graph;
+import unibz.it.edu.rdfElements.RDFObject;
 import unibz.it.edu.rdfElements.Triple;
 import unibz.it.edu.rdfElements.Uri;
 import unibz.it.edu.terms.Rdf;
@@ -12,7 +13,7 @@ import unibz.it.edu.terms.Rdf;
  * @author digy
  * 
  */
-public class RDFExpander {
+public class RDFEntailment {
 
 
 	private static final Uri[] rdf_property_names = 
@@ -24,7 +25,7 @@ public class RDFExpander {
 	 * @param data
 	 * @return
 	 */
-	public Graph exapnd_axioms(Graph data) {
+	public static Graph exapnd_axioms(Graph data) {
 		
 		for (int i = 0; i < rdf_property_names.length; ++i) {
 			data.addTriple(rdf_property_names[i], Rdf.type, Rdf.Property);
@@ -33,13 +34,15 @@ public class RDFExpander {
 		return data;
 	}
 
-	public Graph expand(Graph data) {
+	public static Graph expand(Graph data) {
 
-		boolean rule_applied = false;
-		do {
-			rule_applied = rdf1(data);
-
-		} while (rule_applied);
+		boolean cnt = true;
+		while (cnt) {
+			cnt = false;
+			if (rdf1(data)) {
+				cnt = true;
+			}
+		}
 		return data;
 	}
 
@@ -51,10 +54,10 @@ public class RDFExpander {
 	 * @return true if the rule was successfully applied and a triple was added
 	 *         to the graph
 	 */
-	protected boolean rdf1(Graph data) {
+	private static boolean rdf1(Graph data) {
 		List<Triple> triplets = data.getTriples();
 		for (Triple trp : triplets) {
-			Uri pred = trp.getPredicate();
+			RDFObject pred = trp.getPredicate();
 			Triple _type = new Triple(pred, Rdf.type, Rdf.Property);
 			if (!triplets.contains(_type)) {
 				triplets.add(_type);

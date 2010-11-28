@@ -18,9 +18,14 @@ public class Rdf {
 	
 	public static final Uri subject = new Uri(ns + "subject");
 	public static final Uri predicate = new Uri(ns + "predicate");
+	public static final Uri object = new Uri(ns + "object");
 	public static final Uri value = new Uri(ns+"value");
 	public static final Uri Property = new Uri(ns+"Property");
 	public static final Uri List = new Uri(ns+"List");
+	
+	public static final Uri Statement = new Uri(ns + "Statement");
+	public static final Uri Alt = new Uri(ns + "Alt");
+	public static final Uri Seq = new Uri(ns + "Seq");
 	
  
 

@@ -20,7 +20,7 @@ public class Graph {
 		ns = new HashMap<String, String>();
 	}
 	
-	public void addTriple(RDFObject s, Uri p, RDFObject o) {
+	public void addTriple(RDFObject s, RDFObject p, RDFObject o) {
 		triples.add(new Triple(s, p, o));
 	}
 

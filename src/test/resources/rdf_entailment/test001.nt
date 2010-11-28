@@ -1,0 +1,7 @@
+<http://semantic-web-book.org/uri> <http://example.org/title> "Foundations of Semantic Web Technologies" .
+<http://semantic-web-book.org/uri> <http://example.org/publishedBy> <http://crcpress.com/uri> .
+<http://crcpress.com/uri> <http://example.org/Name> "CRC Press" .
+<http://example.org/title> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://example.org/publishedBy> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://example.org/Name> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
