@@ -13,7 +13,7 @@ import java.util.Properties;
 import unibz.it.edu.rdfElements.Graph;
 import unibz.it.edu.rdfElements.Triple;
 
-public class DataExporter {
+public class DBManager {
 
 	private final String hostname;
 	private final String port;
@@ -23,7 +23,7 @@ public class DataExporter {
 
 	private Connection connect;
 
-	public DataExporter() throws IOException {
+	public DBManager() throws IOException {
 
 		Properties configFile = new Properties();
 		configFile.load(new FileInputStream("db.config"));
@@ -86,7 +86,6 @@ public class DataExporter {
 			e.printStackTrace();
 			return;
 		} 
-		
 	}
 
 	public void prepare_table() {

@@ -7,9 +7,7 @@ import java.sql.SQLException;
 import org.junit.Before;
 import org.junit.Test;
 
-import unibz.it.edu.db.DataExporter;
-import unibz.it.edu.entailment.RDFEntailment;
-import unibz.it.edu.entailment.RDFSEntailment;
+import unibz.it.edu.db.DBManager;
 import unibz.it.edu.entailment.SimpleEntailemnt;
 import unibz.it.edu.parsers.RDFXMLParser;
 import unibz.it.edu.rdfElements.Graph;
@@ -17,11 +15,11 @@ import unibz.it.edu.rdfElements.Graph;
 
 public class TestDBExport {
 	
-	private DataExporter db;
+	private DBManager db;
 	
 	@Before
 	public void setup() throws IOException {
-		db = new DataExporter();
+		db = new DBManager();
 	}
 
 	@Test
@@ -30,28 +28,12 @@ public class TestDBExport {
 		db.prepare_table();
 	}
 	
-//	@Test
-//	public void test_data_dump() throws IOException, SQLException {
-//		RDFXMLParser parser = new RDFXMLParser();
-//		Graph data = parser.decode(new File("simple_entailment/test001.rdf"));
-//		db.dumpData(data);
-//	}
-	
 	@Test
-	public void test_big_data_dump() throws IOException, SQLException {
+	public void test_data_dump() throws IOException, SQLException {
 		RDFXMLParser parser = new RDFXMLParser();
 		Graph data = parser.decode(new File("simple_entailment/test001.rdf"));
-		
-		RDFSEntailment.exapnd_axioms(data);
-		RDFSEntailment.expand(data);
-		
-		RDFEntailment.exapnd_axioms(data);
-		RDFEntailment.expand(data);
-		
 		SimpleEntailemnt.expand(data);
-		
 		db.dumpData(data);
 	}
-	
 	
 }

@@ -1,0 +1,6 @@
+PREFIX ex: <http://example.org/>
+SELECT ?book ?author ?name
+WHERE { 
+?book ex:publishedBy ?author .
+?author ex:Name ?name
+}

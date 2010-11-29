@@ -2,7 +2,9 @@ package unibz.it.edu.entailment;
 
 import java.util.List;
 
+import unibz.it.edu.rdfElements.BNode;
 import unibz.it.edu.rdfElements.Graph;
+import unibz.it.edu.rdfElements.Literal;
 import unibz.it.edu.rdfElements.RDFObject;
 import unibz.it.edu.rdfElements.Triple;
 import unibz.it.edu.rdfElements.Uri;
@@ -17,14 +19,13 @@ import unibz.it.edu.terms.Rdfs;
  */
 public class RDFSEntailment {
 
-
 	private final static Uri[][] axioms = {
 			{ Rdf.type, Rdfs.domain, Rdfs.Resource },
 			{ Rdfs.domain, Rdfs.domain, Rdf.Property },
 			{ Rdfs.range, Rdfs.domain, Rdf.Property },
 			{ Rdfs.subPropertyOf, Rdfs.domain, Rdf.Property },
 			{ Rdfs.subClassOf, Rdfs.domain, Rdfs.Class },
-			{ Rdf.subject, Rdfs.domain, Rdf.Statement},
+			{ Rdf.subject, Rdfs.domain, Rdf.Statement },
 			{ Rdf.predicate, Rdfs.domain, Rdf.Statement },
 			{ Rdf.object, Rdfs.domain, Rdf.Statement },
 			{ Rdfs.member, Rdfs.domain, Rdfs.Resource },
@@ -32,34 +33,35 @@ public class RDFSEntailment {
 			{ Rdf.rest, Rdfs.domain, Rdf.List },
 			{ Rdfs.seeAlso, Rdfs.domain, Rdfs.Resource },
 			{ Rdfs.isDefinedBy, Rdfs.domain, Rdfs.Resource },
-			{ Rdfs.comment, Rdfs.domain, Rdfs.Resource},
-			{ Rdfs.label, Rdfs.domain, Rdfs.Resource},
+			{ Rdfs.comment, Rdfs.domain, Rdfs.Resource },
+			{ Rdfs.label, Rdfs.domain, Rdfs.Resource },
 			{ Rdf.value, Rdfs.domain, Rdfs.Resource },
 
 			{ Rdf.type, Rdfs.range, Rdfs.Class },
 			{ Rdfs.domain, Rdfs.range, Rdfs.Class },
 			{ Rdfs.range, Rdfs.range, Rdfs.Class },
 			{ Rdfs.subPropertyOf, Rdfs.range, Rdf.Property },
-			{ Rdfs.subClassOf, Rdfs.range, Rdfs.Class},
-			{ Rdf.subject, Rdfs.range, Rdfs.Resource},
+			{ Rdfs.subClassOf, Rdfs.range, Rdfs.Class },
+			{ Rdf.subject, Rdfs.range, Rdfs.Resource },
 			{ Rdf.predicate, Rdfs.range, Rdfs.Resource },
 			{ Rdf.object, Rdfs.range, Rdfs.Resource },
 			{ Rdfs.member, Rdfs.range, Rdfs.Resource },
-			{ Rdf.first, Rdfs.range, Rdfs.Resource},
+			{ Rdf.first, Rdfs.range, Rdfs.Resource },
 			{ Rdf.rest, Rdfs.range, Rdf.List },
-			{ Rdfs.seeAlso, Rdfs.range, Rdfs.Resource},
+			{ Rdfs.seeAlso, Rdfs.range, Rdfs.Resource },
 			{ Rdfs.isDefinedBy, Rdfs.range, Rdfs.Resource },
 			{ Rdfs.comment, Rdfs.range, Rdfs.Resource },
 			{ Rdfs.label, Rdfs.range, Rdfs.Literal },
 			{ Rdf.value, Rdfs.range, Rdfs.Resource },
 
 			{ Rdfs.ContainerMembershipProperty, Rdfs.subClassOf, Rdf.Property },
-			{ Rdf.Alt, Rdfs.subClassOf, Rdfs.Container},
+			{ Rdf.Alt, Rdfs.subClassOf, Rdfs.Container },
 			{ Rdf.Bag, Rdfs.subClassOf, Rdfs.Container },
 			{ Rdf.Seq, Rdfs.subClassOf, Rdfs.Container } };
 
 	/**
 	 * Expand the graph with the axiomatic triples
+	 * 
 	 * @param data
 	 * @return
 	 */
@@ -70,7 +72,6 @@ public class RDFSEntailment {
 		return data;
 	}
 
-	
 	public static Graph expand(Graph data) {
 		boolean cnt = true;
 		do {
@@ -114,6 +115,10 @@ public class RDFSEntailment {
 		List<Triple> triples = data.getTriples();
 		for (Triple trp : triples) {
 			RDFObject sub = trp.getSubject();
+
+			if (!(sub instanceof Uri)) {
+				continue;
+			}
 			RDFObject pred = trp.getPredicate();
 			RDFObject obj = trp.getObject();
 			if (pred.equals(Rdfs.domain)) {
@@ -121,7 +126,12 @@ public class RDFSEntailment {
 					RDFObject sub2 = trp2.getSubject();
 					RDFObject pred2 = trp2.getPredicate();
 					RDFObject obj2 = trp2.getObject();
-					Triple _type = new Triple(sub2,Rdf.type, obj);
+
+					if (sub2 instanceof Literal) {
+						continue;
+					}
+
+					Triple _type = new Triple(sub2, Rdf.type, obj);
 					if ((pred2.equals(sub)) && (!triples.contains(_type))) {
 						triples.add(_type);
 						return true;
@@ -136,6 +146,11 @@ public class RDFSEntailment {
 		List<Triple> triples = data.getTriples();
 		for (Triple trp : triples) {
 			RDFObject sub = trp.getSubject();
+
+			if (!(sub instanceof Uri)) {
+				continue;
+			}
+
 			RDFObject pred = trp.getPredicate();
 			RDFObject obj = trp.getObject();
 			if (pred.equals(Rdfs.range)) {
@@ -143,6 +158,11 @@ public class RDFSEntailment {
 					RDFObject sub2 = trp2.getSubject();
 					RDFObject pred2 = trp2.getPredicate();
 					RDFObject obj2 = trp2.getObject();
+
+					if (sub2 instanceof Literal) {
+						continue;
+					}
+
 					Triple _type = new Triple(obj2, Rdf.type, obj);
 					if ((pred2.equals(sub)) && (!triples.contains(_type))) {
 						triples.add(_type);
@@ -166,13 +186,18 @@ public class RDFSEntailment {
 
 			RDFObject sub = trp.getSubject();
 			RDFObject obj = trp.getObject();
+			
+			if (!(sub instanceof Uri)) {
+				continue;
+			}
 
 			Triple _res1 = new Triple(sub, Rdf.type, Rdfs.Resource);
 			Triple _res2 = new Triple(obj, Rdf.type, Rdfs.Resource);
 			if (!triples.contains(_res1)) {
 				triples.add(_res1);
 				return true;
-			} else if (!triples.contains(_res2)) {
+			} else if (!triples.contains(_res2) &&
+					(obj instanceof Uri)) {
 				triples.add(_res2);
 				return true;
 			}
@@ -198,8 +223,8 @@ public class RDFSEntailment {
 					RDFObject pred2 = trp2.getPredicate();
 					RDFObject obj2 = trp2.getObject();
 					Triple _sub = new Triple(sub, Rdfs.subPropertyOf, obj2);
-					if (pred2.equals(Rdfs.subPropertyOf)
-							&& obj.equals(sub2) && !triples.contains(_sub)) {
+					if (pred2.equals(Rdfs.subPropertyOf) && obj.equals(sub2)
+							&& !triples.contains(_sub)) {
 						triples.add(_sub);
 						return true;
 					}
@@ -215,10 +240,9 @@ public class RDFSEntailment {
 			RDFObject sub = trp.getSubject();
 			RDFObject pred = trp.getPredicate();
 			RDFObject obj = trp.getObject();
-			Triple _sub = new Triple(sub,Rdfs.subPropertyOf, sub);
+			Triple _sub = new Triple(sub, Rdfs.subPropertyOf, sub);
 
-			if (pred.equals(Rdf.type)
-					&& obj.equals(Rdf.Property)
+			if (pred.equals(Rdf.type) && obj.equals(Rdf.Property)
 					&& !triples.contains(_sub)) {
 				triples.add(_sub);
 				return true;
@@ -256,8 +280,7 @@ public class RDFSEntailment {
 			RDFObject pred = trp.getPredicate();
 			RDFObject obj = trp.getObject();
 			Triple _subclass = new Triple(sub, Rdfs.subClassOf, Rdfs.Resource);
-			if (pred.equals(Rdf.type)
-					&& obj.equals(Rdfs.Class)
+			if (pred.equals(Rdf.type) && obj.equals(Rdfs.Class)
 					&& !triples.contains(_subclass)) {
 				triples.add(_subclass);
 				return true;
@@ -277,7 +300,7 @@ public class RDFSEntailment {
 					RDFObject sub2 = trp2.getSubject();
 					RDFObject pred2 = trp2.getPredicate();
 					RDFObject obj2 = trp2.getObject();
-					Triple _type = new Triple(sub2,Rdf.type, obj);
+					Triple _type = new Triple(sub2, Rdf.type, obj);
 					if (pred2.equals(Rdf.type) && obj2.equals(sub)
 							&& !triples.contains(_type)) {
 						triples.add(_type);
@@ -296,8 +319,7 @@ public class RDFSEntailment {
 			RDFObject pred = trp.getPredicate();
 			RDFObject obj = trp.getObject();
 			Triple _subclass = new Triple(sub, Rdfs.subClassOf, sub);
-			if (pred.equals(Rdf.type)
-					&& obj.equals(Rdfs.Class)
+			if (pred.equals(Rdf.type) && obj.equals(Rdfs.Class)
 					&& !triples.contains(_subclass)) {
 				triples.add(_subclass);
 				return true;
