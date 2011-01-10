@@ -2,7 +2,6 @@ package unibz.it.edu.entailment;
 
 import java.util.List;
 
-import unibz.it.edu.rdfElements.BNode;
 import unibz.it.edu.rdfElements.Graph;
 import unibz.it.edu.rdfElements.Literal;
 import unibz.it.edu.rdfElements.RDFObject;
@@ -104,6 +103,15 @@ public class RDFSEntailment {
 				cnt = true;
 			}
 			if (rdfs11(data)) {
+				cnt = true;
+			}
+			if (RDFEntailment.rdf1(data)) {
+				cnt = true;
+			}
+			if (SimpleEntailemnt.se1(data)) {
+				cnt = true;
+			}
+			if (SimpleEntailemnt.se1(data)) {
 				cnt = true;
 			}
 

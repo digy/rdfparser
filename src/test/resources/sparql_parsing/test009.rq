@@ -1,0 +1,9 @@
+PREFIX ex: <http://example.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT ?x ?y ?z
+WHERE { 
+?x rdf:type ex:People .
+?x ex:friend ?y .
+?y rdf:type ex:People .
+?y ex:relationship ?z
+}

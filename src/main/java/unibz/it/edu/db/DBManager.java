@@ -2,16 +2,21 @@ package unibz.it.edu.db;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 import unibz.it.edu.rdfElements.Graph;
 import unibz.it.edu.rdfElements.Triple;
+import unibz.it.edu.sparql.QueryParser;
+import unibz.it.edu.sparql.QueryVar;
 
 public class DBManager {
 
@@ -99,7 +104,31 @@ public class DBManager {
 			e.printStackTrace();
 			return;
 		}
+	}
+	
+	public List<List<String>> query(QueryParser sqp) {
+		String sql = sqp.build_sql();
+		List<QueryVar> projection_list = sqp.getHeadVariables();
+		List<List<String>> results = new ArrayList<List<String>>();
+		
+		try {
+			Statement stmt = connect.createStatement();
+			System.out.println(sql);
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				ArrayList<String> row = new ArrayList<String>();
 
+				for (int i=0; i< projection_list.size(); ++i) {
+					row.add(rs.getString(i+1));
+				}
+				results.add(row);
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return results;
+		}
+		return results;
 	}
 
 }

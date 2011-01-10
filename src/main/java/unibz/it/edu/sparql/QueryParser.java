@@ -72,9 +72,9 @@ public class QueryParser {
 				} else if (s instanceof Node_Literal) {
 					Node_Literal subject = (Node_Literal) s;
 					term1 = new QueryVal(subject.getLiteralValue().toString());
-				} else if (o instanceof Node_URI) {
+				} else if (s instanceof Node_URI) {
 					Node_URI subject = (Node_URI) s;
-					term2 = new QueryVal(subject.getURI());
+					term1 = new QueryVal(subject.getURI());
 				}
 
 				if (o instanceof Var) {
@@ -140,8 +140,7 @@ public class QueryParser {
 			StringBuilder name_clause = new StringBuilder();
 
 			if (query.getTerm1() instanceof QueryVal) {
-				where_clause.append(String.format("subject =\'%s\' and ", query
-						.getTerm1().toString()));
+				where_clause.append(String.format("subject =\'%s\' and ", query.getTerm1().toString()));
 			} else {
 				name_clause.append(String.format("subject as sub%s,", query.getTerm1().toString()));
 			}
@@ -155,7 +154,7 @@ public class QueryParser {
 
 			if (query.getTerm2() instanceof QueryVal) {
 				where_clause.append(String.format("object =\'%s\' and ", query
-						.getPred().toString()));
+						.getTerm2().toString()));
 			} else {
 				name_clause.append(String.format("object as obj%s,", query.getTerm2().toString()));
 			}
@@ -163,13 +162,14 @@ public class QueryParser {
 			if (where_clause.length() > 0) {
 				where_clause.delete(where_clause.length() - 4, where_clause
 						.length());
+				where_clause.insert(0, " WHERE ");
 			}
 			if (name_clause.length() > 0) {
-			name_clause.delete(name_clause.length() - 1, name_clause.length());
+				name_clause.delete(name_clause.length() - 1, name_clause.length());
 			}
 
 			String q = String.format(
-					"(SELECT %s FROM data WHERE %s ) as bg%d, \n", name_clause,
+					"(SELECT %s FROM data %s ) as bg%d, \n", name_clause,
 					where_clause, counter);
 			from_clause.append(q);
 			counter++;
@@ -243,7 +243,7 @@ public class QueryParser {
 							&& inner_query.getPred().getValue().equals(
 									var.getValue())) {
 						where_clause.append(String.format(
-								"bg%d.pre%s=bg%d.obj%s and", inner_counter,
+								"bg%d.pre%s=bg%d.obj%s and ", inner_counter,
 								inner_query.getPred().toString(), counter, var
 										.toString()));
 					}
@@ -295,5 +295,10 @@ public class QueryParser {
 		return String.format("SELECT %s\nFROM %s\nWHERE %s\n", select_clause,
 				from_clause, where_clause);
 	}
+	
+	public List<QueryVar> getHeadVariables() {
+		return this.headVariabls;
+	}
+	
 
 }

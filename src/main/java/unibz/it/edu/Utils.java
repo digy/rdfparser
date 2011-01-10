@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 public class Utils {
 	
@@ -55,6 +56,49 @@ public class Utils {
 			rv[i][1] = result_name;
 		}
 		return rv;
+	}
+	
+	public static void tablePrint(List<String> header, List<List<String>> table) {
+		
+		int[] col_width = new int[header.size()+1];
+		
+		for (List<String> row : table) {
+			
+			for (int i=0; i < row.size(); ++i) {
+				String col = row.get(i);
+				if (col.length() > col_width[i]) {
+					col_width[i]  = col.length();
+				}
+			}
+		}
+		
+		for (int i=0; i < header.size(); ++i) {
+			String head = header.get(i);
+			if (head.length() > col_width[i]) {
+				col_width[i] = head.length();
+			}
+		}
+		
+		for (int i=0; i < header.size(); ++i) {
+			String head = header.get(i);
+			System.out.print(String.format("%"+col_width[i]+"s | ", head));
+		}
+		System.out.println();
+		for (int i=0; i < header.size(); ++i) {
+			for (int j=0; j < col_width[i]; ++j) {
+				System.out.print("-");
+			}
+		}
+		System.out.println();
+
+		for (List<String> row : table) {
+			
+			for (int i=0; i < row.size(); ++i) {
+				String col = row.get(i);
+				System.out.print(String.format("%"+col_width[i]+"s | ",col ));
+			}
+			System.out.println();
+		}
 	}
 
 }

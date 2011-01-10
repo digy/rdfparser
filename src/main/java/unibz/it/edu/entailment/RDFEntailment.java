@@ -42,6 +42,12 @@ public class RDFEntailment {
 			if (rdf1(data)) {
 				cnt = true;
 			}
+			if (SimpleEntailemnt.se1(data)) {
+				cnt = true;
+			}
+			if (SimpleEntailemnt.se1(data)) {
+				cnt = true;
+			}
 		}
 		return data;
 	}
@@ -54,7 +60,7 @@ public class RDFEntailment {
 	 * @return true if the rule was successfully applied and a triple was added
 	 *         to the graph
 	 */
-	private static boolean rdf1(Graph data) {
+	public static boolean rdf1(Graph data) {
 		List<Triple> triplets = data.getTriples();
 		for (Triple trp : triplets) {
 			RDFObject pred = trp.getPredicate();

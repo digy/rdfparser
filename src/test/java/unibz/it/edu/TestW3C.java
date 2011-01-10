@@ -12,7 +12,7 @@ import unibz.it.edu.parsers.TurtleParser;
 import unibz.it.edu.rdfElements.BNode;
 import unibz.it.edu.rdfElements.Graph;
 
-public class W3C_Tester {
+public class TestW3C {
 
 	@Test
 	public void test_amp_in_url() throws IOException {
